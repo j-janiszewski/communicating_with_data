@@ -1,6 +1,7 @@
 import plotly.express as px
 import pandas as pd
 import numpy as np
+import plotly.graph_objects as go
 
 
 df = pd.read_csv('ww-data-long-2023-05-02.csv')
@@ -47,7 +48,6 @@ def plot_top_weird_cities(df, drug, k, add_mean=True):
     else:
         top_k = drug_df[drug_df["City2"].isin(corr.index[:k])]
 
-    print(top_k)
     # change the "mean" row to "Weekly trend"
     mean_new_name = f"Average weekly trend"
     top_k.loc[top_k["City2"] == "mean", "City2"] = mean_new_name
@@ -63,34 +63,142 @@ def plot_top_weird_cities(df, drug, k, add_mean=True):
     top_k.rename(columns={"variable": "Day of the week"}, inplace=True)
     top_k.rename(columns={"value": "Normalized usage of drug"}, inplace=True)
 
-    fig = px.line(top_k, x="Day of the week", y="Normalized usage of drug", color='City2',
-                  width=1000, height=630)
-    if add_mean:
-        fig.update_traces(patch={"line": {"width": 2, "dash": 'dot', "color": "black"}},
-                          selector={"legendgroup": mean_new_name})
+    return top_k
+
+
+def create_plot(df):
+    title = "Do you do MDMA on Wednesdays, Thursdays or Fridays?<br>" \
+            "<sup>By researching wastewater we can see that " \
+            "not all the cities do drugs the same way.</sup>"
+    labels = df["City2"].unique()
+    labels = ["Prague", "Zagreb", "Tampere", "Average trend"]
+    # labels = ['Television', 'Newspaper', 'Internet', 'Radio', "mean"]
+    colors = ['rgb(153, 204, 255)', 'rgb(255, 153, 255)', 'rgb(255, 204, 153)', 'rgb(30, 30, 30)']
+
+    mode_size = [6, 6, 6, 6]
+    line_size = [2, 2, 2, 2]
+    line_dash = ['solid', 'solid', 'solid', 'dot']
+
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    x_data = np.vstack((np.array(days), np.array(days), np.array(days), np.array(days),
+                        np.array(days)))
+    y_data = np.array([df[df["City2"] == city]["Normalized usage of drug"]
+                       for city in df["City2"].unique()])
+
+    fig = go.Figure()
+    annotations = []
+
+    for i in range(len(df["City2"].unique())):
+
+        fig.add_trace(go.Scatter(x=x_data[i], y=y_data[i], mode='lines',
+                                 name=labels[i],
+                                 line=dict(color=colors[i], width=line_size[i], dash=line_dash[i]),
+                                 connectgaps=True,
+                                 ))
+
+        # endpoints
+        fig.add_trace(go.Scatter(
+            x=[x_data[i][0], x_data[i][-1]],
+            y=[y_data[i][0], y_data[i][-1]],
+            mode='markers',
+            marker=dict(color=colors[i], size=mode_size[i])
+        ))
+
+        # add annotations for peak days
+        if labels[i] in ["Prague", "Zagreb", "Tampere"]:
+            # find the max value and its index in the y_data array
+            max_value = max(y_data[i])
+            max_day = x_data[i][np.argmax(y_data[i])]
+            annotations.append(dict(x=max_day, y=max_value, text=f"{round(max_value * 100)}%",
+                                    showarrow=False, xshift=10, yshift=10,
+                                    font=dict(family='Arial', size=14)))
 
     fig.update_layout(
-        title=dict(
-            x=0.5,
-            y=0.95,
-            text=f"Cities with unusual {drug} consumption during the week"
-                 f"<br><sup>Compared to the average weekly use of {drug} in 86 European cities</sup>",
-            font=dict(size=20)
+        xaxis=dict(
+            showline=True,
+            showgrid=False,
+            showticklabels=True,
+            linecolor='rgb(204, 204, 204)',
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(
+                family='Arial',
+                size=12,
+                color='rgb(82, 82, 82)',
+            ),
         ),
-        annotations=[dict(
-            x=1.2,
-            y=-0.15,    #Trying a negative number makes the caption disappear - I'd like the caption to be below the map
-            xref='paper',
-            yref='paper',
-            text='Source:<a href="https://www.emcdda.europa.eu/publications/html/pods/waste-water-analysis_en#wastewaterData">\
-                EMCDDA</a>',
-            showarrow=False
-        )]
-
+        yaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showline=False,
+            showticklabels=False,
+        ),
+        width=1000,
+        height=600,
+        autosize=False,
+        margin=dict(
+            autoexpand=False,
+            l=120,
+            r=20,
+            t=110,
+        ),
+        showlegend=False,
+        plot_bgcolor='white'
     )
 
+
+    # Adding labels
+    for y_trace, label, color in zip(y_data, labels, colors):
+        # labeling the left_side of the plot
+        annotations.append(dict(xref='paper', x=0.05, y=y_trace[0],
+                                xanchor='right', yanchor='middle',
+                                text=f"{label} {round(y_trace[0] * 100)}%",
+                                font=dict(family='Arial',
+                                          size=16),
+                                showarrow=False))
+        # labeling the right_side of the plot
+        annotations.append(dict(xref='paper', x=0.95, y=y_trace[-1],
+                                xanchor='left', yanchor='middle',
+                                text=f"{round(y_trace[-1] * 100)}%",
+                                font=dict(family='Arial',
+                                          size=16),
+                                showarrow=False))
+    # Title
+    annotations.append(dict(xref='paper', yref='paper', x=0.0, y=1.05,
+                            xanchor='left', yanchor='bottom',
+                            align="left",
+                            text=title,
+                            font=dict(family='Arial',
+                                      size=30,
+                                      color='rgb(37,37,37)'),
+                            showarrow=False))
+    # Source
+    annotations.append(dict(xref='paper', yref='paper', x=0.5, y=-0.1,
+                            xanchor='center', yanchor='top',
+                            text='Source:<a href="https://www.emcdda.europa.eu/publications/html/'
+                                 'pods/waste-water-analysis_en#wastewaterData">EMCDDA</a>',
+                            font=dict(family='Arial',
+                                      size=12,
+                                      color='rgb(150,150,150)'),
+                            showarrow=False))
+
+    fig.update_layout(annotations=annotations)
+
     fig.show()
+    fig.write_html("plot2.html")
 
 
 if __name__ == "__main__":
-    plot_top_weird_cities(df, "MDMA", 4)
+    df = plot_top_weird_cities(df, "MDMA", 4)
+    # keep only cities: "Prague" and "Zagreb"
+    df = df[df["City2"].isin(["Prague (2) (CZ)", "Zagreb (HR)",
+                              "Tampere (FI)", "Average weekly trend"])]
+    create_plot(df)
+
+"""
+    fig.add_annotation(x=1.02, y=1.6, xanchor="left", align="left",
+                       text="Prague is a student city,<br>so no one is here on the weekends",
+                       showarrow=False, xref='paper', bgcolor=colors[3], borderwidth=1)
+
+
+"""
