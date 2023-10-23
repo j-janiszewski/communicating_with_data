@@ -67,16 +67,16 @@ def plot_top_weird_cities(df, drug, k, add_mean=True):
 
 
 def create_plot(df):
-    title = "Do you do MDMA on Wednesdays, Thursdays or Fridays?<br>" \
-            "<sup>By researching wastewater we can see that " \
-            "not all the cities do drugs the same way.</sup>"
+    title = "Prague, Zagreb and Tampere - the hipsters of European party scene<br>" \
+            "<sup>By measuring daily amount of MDMA in wastewater we can observe " \
+            "alternative party cultures in European cities.</sup>"
     labels = df["City2"].unique()
     labels = ["Prague", "Zagreb", "Tampere", "Average trend"]
     # labels = ['Television', 'Newspaper', 'Internet', 'Radio', "mean"]
     colors = ['rgb(153, 204, 255)', 'rgb(255, 153, 255)', 'rgb(255, 204, 153)', 'rgb(30, 30, 30)']
 
     mode_size = [6, 6, 6, 6]
-    line_size = [2, 2, 2, 2]
+    line_size = [3, 3, 3, 3]
     line_dash = ['solid', 'solid', 'solid', 'dot']
 
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -133,7 +133,7 @@ def create_plot(df):
             showline=False,
             showticklabels=False,
         ),
-        width=1000,
+        width=1200,
         height=600,
         autosize=False,
         margin=dict(
@@ -195,10 +195,4 @@ if __name__ == "__main__":
                               "Tampere (FI)", "Average weekly trend"])]
     create_plot(df)
 
-"""
-    fig.add_annotation(x=1.02, y=1.6, xanchor="left", align="left",
-                       text="Prague is a student city,<br>so no one is here on the weekends",
-                       showarrow=False, xref='paper', bgcolor=colors[3], borderwidth=1)
 
-
-"""
