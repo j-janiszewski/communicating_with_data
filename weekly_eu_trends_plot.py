@@ -126,7 +126,7 @@ def main():
                             yanchor='bottom',
                             align='left',
                             text=' When do Europeans do drugs? Daily smoking and weekend snorting<br>'
-                            '<sup> By analysing wastewaters of 86 european cities we can see on which days drug consumption peaks</sup>',
+                            '<sup> By analysing wastewaters of 86 european cities we can see on which days consumption peaks</sup>',
                             font=dict(family='Arial',
                                       size=30,
                                       color='rgb(37,37,37)'),
