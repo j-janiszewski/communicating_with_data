@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 def filter_only_players_from_top5(df):
     df2 = pd.read_csv("data/player_valuations_with_age_and_club.csv")
     transfers =pd.read_csv("data/club_transfers.csv")
+    transfers = transfers[transfers["league"]!="Arab"]
     clubs = pd.read_csv("data/clubs.csv")
     top5_league_club_ids= clubs[clubs["name"].isin(transfers["Club"].unique())]["club_id"].unique()
     df=df.merge(df2[["player_id","date","player_club_id"]], on=["player_id","date"])
