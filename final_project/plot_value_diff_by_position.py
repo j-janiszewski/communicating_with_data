@@ -2,12 +2,21 @@ import pandas as pd
 import plotly.graph_objects as go
 
 
+def filter_only_players_from_top5(df):
+    df2 = pd.read_csv("data/player_valuations_with_age_and_club.csv")
+    transfers =pd.read_csv("data/club_transfers.csv")
+    transfers = transfers[transfers["league"]!="Arab"]
+    clubs = pd.read_csv("data/clubs.csv")
+    top5_league_club_ids= clubs[clubs["name"].isin(transfers["Club"].unique())]["club_id"].unique()
+    df=df.merge(df2[["player_id","date","player_club_id"]], on=["player_id","date"])
+    return df[df["player_club_id"].isin(top5_league_club_ids)]
+
+
 def number_of_players_per_position(df, year):
     df["year"] = [int(date.split("-")[0]) for date in df["date"]]
     df = df[df["year"] == year]
     df = df.drop_duplicates(subset="player_id")
     df = df.sort_values(by="market_value_in_eur", ascending=False).head(500)
-
     df = df.groupby("sub_position").mean("market_value_in_eur")
 
     position_dict = {}
@@ -18,7 +27,7 @@ def number_of_players_per_position(df, year):
 
 def main():
     player_valuations = pd.read_csv('data/player_valuations_with_age.csv')
-
+    player_valuations = filter_only_players_from_top5(player_valuations)
     values = number_of_players_per_position(player_valuations.copy(), 2023)
 
     coordinates = {
