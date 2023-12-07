@@ -1,6 +1,6 @@
 import pandas as pd
 import plotly.graph_objects as go
-
+from PIL import Image
 
 def filter_only_players_from_top5(df):
     df2 = pd.read_csv("data/player_valuations_with_age_and_club.csv")
@@ -27,6 +27,7 @@ def number_of_players_per_position(df, year):
 
 def main():
     player_valuations = pd.read_csv('data/player_valuations_with_age.csv')
+    image = Image.open("images/fild.jpg")
     player_valuations = filter_only_players_from_top5(player_valuations)
     values = number_of_players_per_position(player_valuations.copy(), 2023)
 
@@ -120,7 +121,18 @@ def main():
         ),
         showlegend=False
     )
-
+    # fig.add_layout_image(
+    #     source=image,
+    #     x=-1.5,
+    #     y=5.2,
+    #        xref="x",
+    #         yref="y",
+    #     sizex=3,
+    #         sizey=5.5,
+    #         sizing="stretch",
+    #         opacity=0.5,
+    #         layer="below"
+    # )
     fig.show()
     fig.write_html("images/average_market_value.html")
 
