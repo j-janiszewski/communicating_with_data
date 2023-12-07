@@ -1,11 +1,20 @@
+"""
+This module contains code used to create plot with clubs 
+that are increasing value of football players most . 
+"""
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def main():
-    # plot bar plot of top 10 clubs with highest value increase
-    import plotly.express as px
+def create_plot_club_increasing_value(position):
+    df = pd.read_csv('data/club_value_increase.csv')
+    df = df.sort_values(by='value_increase', ascending=False)
+
+    df_def = df[df['position'] == 'Defender']
+    df_mid = df[df['position'] == 'Midfield']
+    df_att = df[df['position'] == 'Attack']
+
 
     df = pd.read_csv('data/club_value_increase.csv')
     df = df.sort_values(by='value_increase', ascending=False)
@@ -197,11 +206,11 @@ def main():
         ),
         row=1, col=3
     )
-
-    fig.show()
-    # save as html
-    fig.write_html("images/bar_plot_clubs.html")
+    return fig
 
 
 if __name__ == "__main__":
-    main()
+    fig = create_plot_club_increasing_value()
+    fig.show()
+    # save as html
+    fig.write_html("images/bar_plot_clubs.html")

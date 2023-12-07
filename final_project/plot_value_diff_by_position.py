@@ -1,3 +1,7 @@
+"""
+This module contains code used to create plot representing mean value 
+of football players playing on certain positions. 
+"""
 import pandas as pd
 import plotly.graph_objects as go
 from PIL import Image
@@ -120,11 +124,6 @@ def create_plot_value_per_position():
     )
     return fig
 
-def main():
-    
-    fig = create_plot_value_per_position()
-    
-        
     
     # fig.add_layout_image(
     #     source=image,
@@ -138,9 +137,9 @@ def main():
     #         opacity=0.5,
     #         layer="below"
     # )
+
+if __name__ == "__main__":
+    fig = create_plot_value_per_position()
     fig.show()
     fig.write_html("images/average_market_value.html")
 
-
-if __name__ == "__main__":
-    main()

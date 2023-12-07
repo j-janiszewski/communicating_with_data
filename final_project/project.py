@@ -22,11 +22,6 @@ app.layout = html.Div([
     html.Div(id='tabs-content-example-graph')
 ])
 
-#### Wich positions are more valuable ######
-def create_footballer_value_graph():
-    fig = create_plot_value_per_position()
-    return fig
-
 #### Value of the positions ######
 def create_line_graph_positions(year_from=2010, year_to=2023):
    
@@ -345,7 +340,7 @@ def render_content(tab,stored_data):
         stored_data = {}
 
     if tab == 'tab-1-example-graph':
-        fig = stored_data.get('fig1') or create_footballer_value_graph()
+        fig = stored_data.get('fig1') or create_plot_value_per_position()
         stored_data['fig1'] = fig
         return html.Div([
             html.H3('Wich positions are more valuable'),
