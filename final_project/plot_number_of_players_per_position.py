@@ -57,7 +57,8 @@ def main(year_from=2010, year_to=2023):
 
         if color == "grey":
             r = g = b = (k+1) / (num_positions + 2)
-            color = f"rgb({r}, {g}, {b})"
+            color = f"rgba({r}, {g}, {b}, 0)"
+            print(color)
             k += 1
 
         fig.add_trace(go.Scatter(
@@ -70,15 +71,17 @@ def main(year_from=2010, year_to=2023):
         ))
 
     fig.update_layout(
-        title='Evolution of the game: Teams playing with wingers instead of strikers<br>'
-              '<sup>Comparing the number of players in each position '
-              'from 500 most valuable players each year</sup>',
+        # size of the plot
+        width=900,
+        height=600,
+        title='Do you really want to be a center forward?<br>'
+              '<sup>Percentage of centre forwards amongst worlds '
+              'best players dropped a lot since 2010</sup>',
         # title size and font
         title_font_size=30,
         title_font_family="Arial",
         xaxis_tickfont_size=14,
         yaxis=dict(
-            title='Number of players',
             titlefont_size=16,
             tickfont_size=14,
             showgrid=False,
@@ -89,7 +92,7 @@ def main(year_from=2010, year_to=2023):
         xaxis=dict(
             title='Year',
             titlefont_size=16,
-            tickfont_size=14,
+            tickfont_size=20,
             showgrid=False,
             zeroline=False,
             showticklabels=True,
@@ -101,7 +104,7 @@ def main(year_from=2010, year_to=2023):
         # plot background color
         plot_bgcolor='white',
         # margin left, bottom, right, top
-        margin=dict(l=150, r=50, t=50, b=50)
+        margin=dict(l=150, r=50, t=80, b=50)
     )
     print(df)
 
