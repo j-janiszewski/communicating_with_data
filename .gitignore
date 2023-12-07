@@ -2,3 +2,5 @@
 *.png
 *.zip
 .DS_store
+
+*.pyc

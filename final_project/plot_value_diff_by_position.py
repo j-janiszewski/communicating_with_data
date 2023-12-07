@@ -24,13 +24,10 @@ def number_of_players_per_position(df, year):
         position_dict[position] = df.loc[position, "market_value_in_eur"]
     return position_dict
 
-
-def main():
+def create_plot_value_per_position():
     player_valuations = pd.read_csv('data/player_valuations_with_age.csv')
-    image = Image.open("images/fild.jpg")
     player_valuations = filter_only_players_from_top5(player_valuations)
     values = number_of_players_per_position(player_valuations.copy(), 2023)
-
     coordinates = {
         "Attacking Midfield": (0, 3.15),
         "Second Striker": (0, 3.9),
@@ -82,7 +79,7 @@ def main():
             hoverinfo="text"
         ))
 
-    # add annotations for the increase_per_position
+         # add annotations for the increase_per_position
     annotations = []
     for position in coordinates:
         # get the radius of the circle
@@ -121,6 +118,14 @@ def main():
         ),
         showlegend=False
     )
+    return fig
+
+def main():
+    
+    fig = create_plot_value_per_position()
+    
+        
+    
     # fig.add_layout_image(
     #     source=image,
     #     x=-1.5,

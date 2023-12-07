@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.graph_objects as go
 from dash import Dash, dcc, html, Input, Output,State, callback
-from plot_value_diff_by_position import filter_only_players_from_top5, number_of_players_per_position
+from plot_value_diff_by_position import create_plot_value_per_position
 from plot_number_of_players_per_position import number_of_players_per_position
 from plotly.subplots import make_subplots
 import plotly.express as px
@@ -16,117 +16,21 @@ app.layout = html.Div([
         dcc.Tab(label='Wich positions are more valuable', value='tab-1-example-graph'),
         dcc.Tab(label='Value of the positions', value='tab-2-example-graph'),
         dcc.Tab(label='Value of the positions', value='tab-3-example-graph'),
-        dcc.Tab(label='Value of the positions', value='tab-4-example-graph'),
-        dcc.Dropdown(['Defenders', 'Midfielders', 'Attackers'],'Defenders', id= 'dropdown'),
-        dcc.Store(id='graph-storage')
+        dcc.Tab(label='Value of the positions', value='tab-4-example-graph')       
     ]),
+     dcc.Store(id='graph-storage'),
     html.Div(id='tabs-content-example-graph')
 ])
 
 #### Wich positions are more valuable ######
 def create_footballer_value_graph():
-    player_valuations = pd.read_csv('player_valuations_with_age.csv')
-    player_valuations = filter_only_players_from_top5(player_valuations)
-    values = number_of_players_per_position(player_valuations.copy(), 2023)
-
-    coordinates = {
-        "Attacking Midfield": (0, 3.15),
-        "Second Striker": (0, 3.9),
-        "Centre-Back": (0, 0.8),
-        "Right Winger": (0.8, 4),
-        "Right Midfield": (1, 2.4),
-        "Left-Back": (-0.8, 1),
-        "Centre-Forward": (0, 4.6),
-        "Left Midfield": (-1, 2.4),
-        "Defensive Midfield": (0, 1.65),
-        "Left Winger": (-0.8, 4),
-        "Goalkeeper": (0, 0),
-        "Right-Back": (0.8, 1),
-        "Central Midfield": (0, 2.4)
-    }
-
-    colors = {
-        "Attacking Midfield": "#ff7f0e",
-        "Second Striker": "#2ca02c",
-        "Centre-Back": "#1f77b4",
-        "Right Winger": "#2ca02c",
-        "Right Midfield": "#ff7f0e",
-        "Left-Back": "#1f77b4",
-        "Centre-Forward": "#2ca02c",
-        "Left Midfield": "#ff7f0e",
-        "Defensive Midfield": "#ff7f0e",
-        "Left Winger": "#2ca02c",
-        "Goalkeeper": "#d62728",
-        "Right-Back": "#1f77b4",
-        "Central Midfield": "#ff7f0e"
-    }
-
-    fig = go.Figure()
-
-    for position in coordinates:
-        print(position)
-
-        fig.add_trace(go.Scatter(
-            x=[coordinates[position][0]],
-            y=[coordinates[position][1]],
-            mode="markers",
-            marker=dict(
-                size=values[position] / 600000,
-                color=colors[position],
-                opacity=0.5
-            ),
-            name=position,
-            text=position,
-            hoverinfo="text"
-        ))
-
-    # add annotations for the increase_per_position
-    annotations = []
-    for position in coordinates:
-        # get the radius of the circle
-        # r = 0.25
-        r = (values[position] / (600000 * 3.14)) ** 0.5
-        y = coordinates[position][1] - r / 10 + 0.07
-        annotations.append(dict(xref='x', yref='y',
-                                x=coordinates[position][0], y=y,
-                                text=position,
-                                font=dict(family='Arial', size=14,
-                                          color=colors[position]),
-                                showarrow=False))
-        annotations.append(dict(xref='x', yref='y',
-                                x=coordinates[position][0], y=coordinates[position][1],
-                                text=f"{round(values[position] / 1000000, 1)}M",
-                                font=dict(family='Arial', size=14,
-                                          color=colors[position]),
-                                showarrow=False))
-    fig.update_layout(annotations=annotations)
-
-    fig.update_layout(
-        width=700,
-        height=700,
-        margin=dict(l=100, r=50, t=50, b=50),
-        plot_bgcolor='rgba(0,0,0,0)',
-        title="Average market value of the increase_per_position group_by the top 500 players 2023",
-        xaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showticklabels=False
-        ),
-        yaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showticklabels=False
-        ),
-        showlegend=False
-    )
-
+    fig = create_plot_value_per_position()
     return fig
 
 #### Value of the positions ######
 def create_line_graph_positions(year_from=2010, year_to=2023):
-    # ... (mesma lógica que estava na função main)
-    # Certifique-se de que esta função retorne a figura (fig) no final
-    player_valuations = pd.read_csv('player_valuations_with_age.csv')
+   
+    player_valuations = pd.read_csv('data/player_valuations_with_age.csv')
 
     positions_per_year = {}
     for year in range(year_from, year_to+1):
@@ -239,8 +143,8 @@ def create_line_graph_positions(year_from=2010, year_to=2023):
     return fig
 
 ########Clubs##########
-def create_clubs():
-    df = pd.read_csv('club_value_increase.csv')
+def create_clubs(positions):
+    df = pd.read_csv('data/club_value_increase.csv')
     df = df.sort_values(by='value_increase', ascending=False)
 
     df_def = df[df['position'] == 'Defender']
@@ -434,9 +338,9 @@ def create_clubs():
     return fig
 @callback([Output('tabs-content-example-graph', 'children'),
           Output('graph-storage', 'data')],
-              [Input('tabs-example-graph', 'value'),Input('dropdown', 'value')],
+              Input('tabs-example-graph', 'value'),
               [State('graph-storage', 'data')])
-def render_content(tab,stored_data,dropdown_value):
+def render_content(tab,stored_data):
     if stored_data is None:
         stored_data = {}
 
@@ -465,20 +369,21 @@ def render_content(tab,stored_data,dropdown_value):
     
     elif tab == 'tab-3-example-graph':
         
-        # Use the dropdown value to determine which graph to display
-        if dropdown_value == 'Defenders':
-            fig3 = stored_data.get('fig3') or create_clubs()
-            stored_data['fig3'] = fig3
-        elif dropdown_value == 'Midfielders':
-            fig3 = stored_data.get('fig3') or create_clubs()
-            stored_data['fig3'] = fig3
-        else:  # 'Attackers'
-            fig4 = stored_data.get('fig4') or create_line_graph_positions()
-            stored_data['fig4'] = fig4
+        # # Use the dropdown value to determine which graph to display
+        # if dropdown_value == 'Defenders':
+        #     fig3 = stored_data.get('fig3') or create_clubs()
+        #     stored_data['fig3'] = fig3
+        # elif dropdown_value == 'Midfielders':
+        #     fig3 = stored_data.get('fig3') or create_clubs()
+        #     stored_data['fig3'] = fig3
+        # else:  # 'Attackers'
+        #     fig4 = stored_data.get('fig4') or create_line_graph_positions()
+        #     stored_data['fig4'] = fig4
 
         return html.Div([
-            html.H3(f'Top 10 clubs that increase the median value of young {dropdown_value}'),
-            dcc.Graph(id='graph-3-tabs-dcc', figure=fig3)
+            html.H3(f'Top 10 clubs that increase the median value of young Defenders',id="plot_3_title"),
+                    dcc.Dropdown(['Defenders', 'Midfielders', 'Attackers'],'Defenders', id= 'dropdown_positions'),
+            dcc.Graph(id='graph-3-tabs-dcc')
         ]), stored_data
     
     
@@ -495,9 +400,24 @@ def render_content(tab,stored_data,dropdown_value):
                     }]
                 }
             )
-        ])
+        ]), stored_data
     
     return html.Div(), stored_data
+
+@callback([Output('plot_3_title', 'children'),
+          Output('graph-3-tabs-dcc', 'figure'),Output('graph-storage', 'data')],
+          Input(component_id='dropdown_positions', component_property='value'),
+            State('graph-storage', 'data'))
+          
+def render_third_tab(position, stored_data):
+    if stored_data is None:
+        stored_data = {}
+    fig3 = stored_data.get('fig3') or create_clubs(position)
+    stored_data['fig3'] = fig3
+    return f"Top 10 clubs that increase the median value of young {position}", fig3,stored_data
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
