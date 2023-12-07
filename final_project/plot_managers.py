@@ -11,10 +11,10 @@ def main():
         'Unai Emery',
         'Erik ten Hag',
         'Arsène Wenger',
-        'Brendan Rodgers',
+        'Jürgen Klopp',
         'José Mourinho',
-        'Frank de Boer',
-        'Philippe Clement'
+        'Frank de Boer'
+        # 'Philippe Clement'
     ]
     df = df[df['manager'].isin(managers_list)]
     df = df.sort_values(by='value_increase', ascending=False)
@@ -53,7 +53,9 @@ def main():
         # white background
         plot_bgcolor='rgba(0,0,0,0)',
         # title
-        title="BEST MANAGERS...",
+        title='Mourinho is a good manager, but ... </sup>',
+        title_font_size=30,
+        title_font_family="Arial",
         xaxis_range=[-0.5, len(df['manager']) + 0.5],
         margin=dict(l=30, r=30, t=80, b=50),
     )
