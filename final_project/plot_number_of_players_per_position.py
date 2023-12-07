@@ -15,18 +15,19 @@ def number_of_players_per_position(df, year):
     return position_dict
 
 
-def main(year_from=2010, year_to=2023):
-    player_valuations = pd.read_csv('data/player_valuations_with_age.csv')
+def number_of_players_per_position_plot(year_from=2010, year_to=2023):
+    player_valuations = pd.read_csv("data/player_valuations_with_age.csv")
 
     positions_per_year = {}
-    for year in range(year_from, year_to+1):
-        positions_per_year[year] = number_of_players_per_position(player_valuations.copy(), year)
+    for year in range(year_from, year_to + 1):
+        positions_per_year[year] = number_of_players_per_position(
+            player_valuations.copy(), year
+        )
 
     # turn the dictionary of dictionaries into a dataframe
     df = pd.DataFrame(positions_per_year)
 
     df = df / 5
-
 
     # plot the difference between the number of players per position in 2023 and 2010
     # on a bar chart using plotly
@@ -37,8 +38,6 @@ def main(year_from=2010, year_to=2023):
         "Right Winger": "#0080FF",
         "Centre-Forward": "#FF6666",
     }
-
-
 
     fig = go.Figure()
     k = 0
@@ -56,27 +55,29 @@ def main(year_from=2010, year_to=2023):
             size = 10
 
         if color == "grey":
-            r = g = b = (k+1) / (num_positions + 2)
+            r = g = b = (k + 1) / (num_positions + 2)
             color = f"rgba({r}, {g}, {b}, 0)"
             print(color)
             k += 1
 
-        fig.add_trace(go.Scatter(
-            x=df.columns,
-            y=df.loc[position],
-            name=position,
-            marker=dict(color=color, size=size),
-            line=dict(color=color, width=size / 2),
-            connectgaps=True
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=df.columns,
+                y=df.loc[position],
+                name=position,
+                marker=dict(color=color, size=size),
+                line=dict(color=color, width=size / 2),
+                connectgaps=True,
+            )
+        )
 
     fig.update_layout(
         # size of the plot
         width=900,
         height=600,
-        title='Do you really want to be a center forward?<br>'
-              '<sup>Percentage of centre forwards amongst worlds '
-              'best players dropped a lot since 2010</sup>',
+        title="Do you really want to be a center forward?<br>"
+        "<sup>Percentage of centre forwards amongst worlds "
+        "best players dropped a lot since 2010</sup>",
         # title size and font
         title_font_size=30,
         title_font_family="Arial",
@@ -87,24 +88,24 @@ def main(year_from=2010, year_to=2023):
             showgrid=False,
             zeroline=False,
             showticklabels=False,
-            range=[0, 22]
+            range=[0, 22],
         ),
         xaxis=dict(
-            title='Year',
+            title="Year",
             titlefont_size=16,
             tickfont_size=20,
             showgrid=False,
             zeroline=False,
             showticklabels=True,
-            range=[year_from-1, year_to+1],
-            tickvals=[year_from, year_to]
+            range=[year_from - 1, year_to + 1],
+            tickvals=[year_from, year_to],
         ),
         # remove legend
         showlegend=False,
         # plot background color
-        plot_bgcolor='white',
+        plot_bgcolor="white",
         # margin left, bottom, right, top
-        margin=dict(l=150, r=50, t=80, b=50)
+        margin=dict(l=150, r=50, t=80, b=50),
     )
     print(df)
 
@@ -115,24 +116,36 @@ def main(year_from=2010, year_to=2023):
         text_left = df[df.index == position][year_from].values[0]
         text_right = df[df.index == position][year_to].values[0]
 
-        annotations.append(dict(xref='paper', x=0.05, y=df[df.index == position][year_from].values[0],
-                                xanchor='right', yanchor='middle',
-                                text=f"{position} {text_left}%",
-                                font=dict(family='Arial',
-                                          size=16),
-                                showarrow=False))
+        annotations.append(
+            dict(
+                xref="paper",
+                x=0.05,
+                y=df[df.index == position][year_from].values[0],
+                xanchor="right",
+                yanchor="middle",
+                text=f"{position} {text_left}%",
+                font=dict(family="Arial", size=16),
+                showarrow=False,
+            )
+        )
         # labeling the right_side of the plot
-        annotations.append(dict(xref='paper', x=0.95, y=df[df.index == position][year_to].values[0],
-                                xanchor='left', yanchor='middle',
-                                text=f"{text_right}%",
-                                font=dict(family='Arial',
-                                          size=16),
-                                showarrow=False))
+        annotations.append(
+            dict(
+                xref="paper",
+                x=0.95,
+                y=df[df.index == position][year_to].values[0],
+                xanchor="left",
+                yanchor="middle",
+                text=f"{text_right}%",
+                font=dict(family="Arial", size=16),
+                showarrow=False,
+            )
+        )
     fig.update_layout(annotations=annotations)
-
-    fig.show()
-    fig.write_html("images/plot_value_difference_in_positions.html")
+    return fig
 
 
 if __name__ == "__main__":
-    main()
+    fig = number_of_players_per_position_plot()
+    fig.show()
+    fig.write_html("images/plot_value_difference_in_positions.html")
