@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def create_plot_club_increasing_value(position):
+def create_plot_club_increasing_value_mid(position):
     df = pd.read_csv("data/club_value_increase.csv")
     df = df.sort_values(by="value_increase", ascending=False)
 
@@ -125,9 +125,8 @@ def create_plot_club_increasing_value(position):
   
     return fig
 
-
 if __name__ == "__main__":
-    fig = create_plot_club_increasing_value("Midfielder")
+    fig = create_plot_club_increasing_value_mid("Midfielder")
     fig.show()
     # save as html
     fig.write_html("images/midfield.html")

@@ -4,6 +4,9 @@ from dash import Dash, dcc, html, Input, Output, State, callback
 from plot_value_diff_by_position import create_plot_value_per_position
 from plot_number_of_players_per_position import number_of_players_per_position_plot
 from bar_plot_clubs import create_plot_club_increasing_value
+from defenders import create_plot_club_increasing_value_def
+from midfielders import create_plot_club_increasing_value_mid
+from attackers import create_plot_club_increasing_value_at
 import plotly.express as px
 import dash_bootstrap_components as dbc
 
@@ -28,7 +31,7 @@ app.layout = html.Div(
                     value="tab-1-example-graph",
                 ),
                 dcc.Tab(label="Value of the positions", value="tab-2-example-graph"),
-                dcc.Tab(label="Value of the positions", value="tab-3-example-graph"),
+                dcc.Tab(label="Top Destinations for Young Players", value="tab-3-example-graph"),
                 dcc.Tab(label="Value of the positions", value="tab-4-example-graph"),
             ],
         ),
@@ -78,7 +81,7 @@ def render_content(tab, stored_data):
             html.Div(
                 [
                     html.H3(
-                        f"Top 10 clubs that increase the median value of young Defenders",
+                        f"Top 10 clubs that increase the median value of young players",
                         id="plot_3_title",
                     ),
                     dcc.RadioItems(
@@ -86,6 +89,7 @@ def render_content(tab, stored_data):
         {
             "label": html.Div(['Defenders'], style={'color': '#1f77b4', 'font-size': 20,'padding':20}),
             "value": "Defenders",
+
         },
         {
             "label": html.Div(['Midfielders'], style={'color': '#ff7f0e', 'font-size': 20, 'padding':20}),
@@ -127,6 +131,7 @@ def render_content(tab, stored_data):
         Output("plot_3_title", "children"),
         Output("graph-3-tabs-dcc", "figure"),
         Output("graph-tab3-storage", "data"),
+        
     ],
     Input(component_id="radio-items-positions", component_property="value"),
     State("graph-tab3-storage", "data"),
@@ -134,12 +139,21 @@ def render_content(tab, stored_data):
 def render_third_tab(position, stored_data):
     if stored_data is None:
         stored_data = {}
-    fig3 = stored_data.get("fig3") or create_plot_club_increasing_value(position)
-    stored_data["fig3"] = fig3
+    
+    if position == "Defenders":
+        fig = stored_data.get("fig3") or create_plot_club_increasing_value_def(position)
+    elif position == "Midfielders":
+        fig = stored_data.get("fig4") or create_plot_club_increasing_value_mid(position)
+    else :
+        fig = stored_data.get("fig5") or create_plot_club_increasing_value_at(position)
+
+    stored_data.update({f"fig_{position.lower()}": fig})
+
     return (
         f"Top 10 clubs that increase the median value of young {position}",
-        fig3,
+        fig,
         stored_data,
+
     )
 
 
