@@ -57,7 +57,8 @@ def plot_best_managers():
         title_font_size=30,
         title_font_family="Arial",
         title_font_color="black",
-        title_x=0.5,
+        title_x=0.1,
+        title_xanchor="left",
         xaxis_range=[-0.5, len(df["manager"]) + 0.5],
         margin=dict(l=30, r=30, t=80, b=50),
     )

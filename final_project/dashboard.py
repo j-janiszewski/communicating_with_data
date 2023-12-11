@@ -87,7 +87,7 @@ def render_content(tab, stored_data):
                                 "label": html.Div(
                                     ["Defenders"],
                                     style={
-                                        "color": "#53917E",
+                                        "color": "#A9D78E",
                                         "font-size": 20,
                                         "padding": 0,
                                         "margin-bottom": 0,
@@ -99,7 +99,7 @@ def render_content(tab, stored_data):
                                 "label": html.Div(
                                     ["Midfielders"],
                                     style={
-                                        "color": "#7EBDC2",
+                                        "color": "#9DC3C2",
                                         "font-size": 20,
                                         "padding-left": 7,
                                         "padding-right": 7,
@@ -112,7 +112,7 @@ def render_content(tab, stored_data):
                                 "label": html.Div(
                                     ["Attackers"],
                                     style={
-                                        "color": "#BB4430",
+                                        "color": "#6B97C3",
                                         "font-size": 20,
                                         "padding": 0,
                                         "margin-bottom": 0,
@@ -125,6 +125,20 @@ def render_content(tab, stored_data):
                         id="radio-items-positions",
                         inline=True,
                         style=dict(display="flex", justifyContent="center", padding=20),
+                        # make it look like a rectangle
+                        labelStyle=dict(
+                            display="flex",
+                            justifyContent="center",
+                            alignItems="center",
+                            width=150,
+                            height=50,
+                            border="2px solid",
+                            borderRadius=10,
+                            margin=10,
+                            backgroundColor="#F4F4F4"
+                        ),
+                        inputStyle=dict(display="none"),
+                        inputClassName="radio-items-positions",
                     ),
                 ]
             ),

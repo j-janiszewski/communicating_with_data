@@ -7,7 +7,14 @@ import plotly.graph_objects as go
 
 
 def create_plot_club_increasing_value(position: str):
-    colors = {"Attackers": "#BB4430", "Defenders": "#53917E", "Midfielders": "#7EBDC2"}
+    # colors = {"Attackers": "#BB4430", "Defenders": "#53917E", "Midfielders": "#7EBDC2"}
+
+    colors = {
+        "Defenders": "#A9D78E",
+        "Midfielders": "#9DC3C2",
+        "Attackers": "#6B97C3",
+    }
+
 
     df = pd.read_csv("data/club_value_increase.csv")
     df = df[df["position"] == position[:-1]]
@@ -33,13 +40,13 @@ def create_plot_club_increasing_value(position: str):
             text="If you have a chance, pick one of this clubs <br><sup>Not all clubs are equally good at increasing value of players in different positions</sup>",
             font_size=30,
             font_family="Arial",
-            x=0.05,
+            x=0.25,
         ),
         yaxis=dict(
             showgrid=False,
             showline=False,
             showticklabels=False,
-            # domain=[0, 1],
+            domain=[0, 1],
         ),
         xaxis=dict(
             zeroline=False,

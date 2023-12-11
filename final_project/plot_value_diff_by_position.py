@@ -54,10 +54,10 @@ def create_plot_value_per_position():
         "Central Midfield": (0, 2.4),
     }
     colors = {
-        "Goalkeeper": "#9F9396",
-        "Defender": "#53917E",
-        "Attacker": "#BB4430",
-        "Midfielder": "#7EBDC2",
+        "Goalkeeper": "#CCE47E",
+        "Defender": "#A9D78E",
+        "Midfielder": "#9DC3C2",
+        "Attacker": "#6B97C3",
     }
     position_groups = {
         "Attacking Midfield": "Midfielder",
@@ -88,7 +88,7 @@ def create_plot_value_per_position():
                 marker=dict(
                     size=values[position] / 600000,
                     color=colors[position_groups[position]],
-                    opacity=0.8,
+                    opacity=1,
                 ),
                 name=position,
                 text=position,
