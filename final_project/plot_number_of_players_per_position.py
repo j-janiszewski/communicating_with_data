@@ -47,7 +47,7 @@ def number_of_players_per_position_plot(year_from=2010, year_to=2023):
     df = df.sample(frac=1)
 
     for position in df.index:
-        print(position)
+        # print(position)
         color = colors.get(position, "grey")
         if color == "grey":
             size = 5
@@ -57,7 +57,7 @@ def number_of_players_per_position_plot(year_from=2010, year_to=2023):
         if color == "grey":
             r = g = b = (k + 1) / (num_positions + 2)
             color = f"rgba({r}, {g}, {b}, 0)"
-            print(color)
+            # print(color)
             k += 1
 
         fig.add_trace(
@@ -75,12 +75,12 @@ def number_of_players_per_position_plot(year_from=2010, year_to=2023):
         # size of the plot
         width=900,
         height=600,
-        title="Do you really want to be a center forward?<br>"
-        "<sup>Percentage of centre forwards amongst worlds "
-        "best players dropped a lot since 2010</sup>",
+        title="But maybe it's better to be a winger than a centre forward<br>"
+        "<sup>The game is evolving and the number of centre forwards is decreasing</sup>",
         # title size and font
         title_font_size=30,
         title_font_family="Arial",
+        title_x=0.05,
         xaxis_tickfont_size=14,
         yaxis=dict(
             titlefont_size=16,
@@ -107,7 +107,7 @@ def number_of_players_per_position_plot(year_from=2010, year_to=2023):
         # margin left, bottom, right, top
         margin=dict(l=150, r=50, t=80, b=50),
     )
-    print(df)
+    # print(df)
 
     annotations = []
     # Adding labels

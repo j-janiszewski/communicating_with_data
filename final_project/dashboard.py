@@ -4,9 +4,8 @@ from dash import Dash, dcc, html, Input, Output, State, callback
 from plot_value_diff_by_position import create_plot_value_per_position
 from plot_number_of_players_per_position import number_of_players_per_position_plot
 from bar_plot_clubs import create_plot_club_increasing_value
-from defenders import create_plot_club_increasing_value_def
-from midfielders import create_plot_club_increasing_value_mid
-from attackers import create_plot_club_increasing_value_at
+from plot_managers import plot_best_managers
+from plot_leagues import plot_leagues
 import plotly.express as px
 import dash_bootstrap_components as dbc
 
@@ -15,24 +14,28 @@ external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 app = Dash(
     __name__,
     suppress_callback_exceptions=True,
-    external_stylesheets=[dbc.themes.BOOTSTRAP, 'https://codepen.io/chriddyp/pen/bWLwgP.css'],
+    external_stylesheets=[
+        dbc.themes.BOOTSTRAP,
+        "https://codepen.io/chriddyp/pen/bWLwgP.css",
+    ],
     prevent_initial_callbacks="initial_duplicate",
 )
 
 app.layout = html.Div(
     [
-        html.H1("Charting Success: How Data visualization Guides a Young Fotballer"),
+        html.H1("Footballers guide to becoming MVP", style={"textAlign": "center"}),
         dcc.Tabs(
             id="tabs-example-graph",
             value="tab-1-example-graph",
             children=[
                 dcc.Tab(
-                    label="Wich positions are more valuable",
+                    label="Which position",
                     value="tab-1-example-graph",
                 ),
-                dcc.Tab(label="Value of the positions", value="tab-2-example-graph"),
-                dcc.Tab(label="Top Destinations for Young Players", value="tab-3-example-graph"),
-                dcc.Tab(label="Value of the positions", value="tab-4-example-graph"),
+                dcc.Tab(label="Trending positions", value="tab-2-example-graph"),
+                dcc.Tab(label="Which league", value="tab-5-example-graph"),
+                dcc.Tab(label="Which club", value="tab-3-example-graph"),
+                dcc.Tab(label="Which manager", value="tab-4-example-graph"),
             ],
         ),
         dcc.Store(id="graph-storage"),
@@ -40,6 +43,7 @@ app.layout = html.Div(
         html.Div(id="tabs-content-example-graph"),
     ]
 )
+
 
 @callback(
     [Output("tabs-content-example-graph", "children"), Output("graph-storage", "data")],
@@ -55,23 +59,19 @@ def render_content(tab, stored_data):
         stored_data["fig1"] = fig
         return (
             html.Div(
-                [
-                    html.H3("Wich positions are more valuable"),
-                    dcc.Graph(id="positions_field", figure=fig),
-                ]
+                [dcc.Graph(id="positions_field", figure=fig)],
+                style=dict(display="flex", justifyContent="center"),
             ),
             stored_data,
         )
 
     elif tab == "tab-2-example-graph":
-        fig2 = stored_data.get("fig2") or number_of_players_per_position_plot()
-        stored_data["fig2"] = fig2
+        fig = stored_data.get("fig2") or number_of_players_per_position_plot()
+        stored_data["fig2"] = fig
         return (
             html.Div(
-                [
-                    html.H3("Line Graph Positions"),
-                    dcc.Graph(id="graph-2-tabs-dcc", figure=fig2),
-                ]
+                [dcc.Graph(id="graph-2-tabs-dcc", figure=fig)],
+                style=dict(display="flex", justifyContent="center"),
             ),
             stored_data,
         )
@@ -80,45 +80,83 @@ def render_content(tab, stored_data):
         return (
             html.Div(
                 [
-                    html.H3(
-                        f"Top 10 clubs that increase the median value of young players",
-                        id="plot_3_title",
-                    ),
-                    dcc.RadioItems(
-    [
-        {
-            "label": html.Div(['Defenders'], style={'color': '#1f77b4', 'font-size': 20,'padding':20}),
-            "value": "Defenders",
-
-        },
-        {
-            "label": html.Div(['Midfielders'], style={'color': '#ff7f0e', 'font-size': 20, 'padding':20}),
-            "value": "Midfielders",
-        },
-        {
-            "label": html.Div(['Attackers'], style={'color': '#2ca02c', 'font-size': 20,'padding':20}),
-            "value": "Attackers",
-        },
-    ], value='Defenders', id="radio-items-positions", inline=True
-),
                     dcc.Graph(id="graph-3-tabs-dcc"),
+                    dcc.RadioItems(
+                        [
+                            {
+                                "label": html.Div(
+                                    ["Defenders"],
+                                    style={
+                                        "color": "#1f77b4",
+                                        "font-size": 20,
+                                        "padding": 20,
+                                        "margin-bottom": 0,
+                                    },
+                                ),
+                                "value": "Defenders",
+                            },
+                            {
+                                "label": html.Div(
+                                    ["Midfielders"],
+                                    style={
+                                        "color": "#ff7f0e",
+                                        "font-size": 20,
+                                        "padding": 20,
+                                        "margin-bottom": 0,
+                                    },
+                                ),
+                                "value": "Midfielders",
+                            },
+                            {
+                                "label": html.Div(
+                                    ["Attackers"],
+                                    style={
+                                        "color": "#2ca02c",
+                                        "font-size": 20,
+                                        "padding": 20,
+                                        "margin-bottom": 0,
+                                    },
+                                ),
+                                "value": "Attackers",
+                            },
+                        ],
+                        value="Defenders",
+                        id="radio-items-positions",
+                        inline=True,
+                        style=dict(display="flex", justifyContent="center"),
+                    ),
                 ]
             ),
             stored_data,
         )
 
     elif tab == "tab-4-example-graph":
+        fig = stored_data.get("fig3") or plot_best_managers()
+        stored_data["fig3"] = fig
         return (
             html.Div(
                 [
-                    html.H3("Tab content 4"),
                     dcc.Graph(
                         id="graph-4-tabs-dcc",
-                        figure={
-                            "data": [{"x": [1, 2, 3], "y": [5, 10, 6], "type": "bar"}]
-                        },
+                        figure=fig,
                     ),
                 ]
+            ),
+            stored_data,
+        )
+
+    elif tab == "tab-5-example-graph":
+        fig = stored_data.get("fig4") or plot_leagues()
+        stored_data["fig4"] = fig
+        return (
+            html.Div(
+                [
+                    dcc.Graph(
+                        id="graph-4-tabs-dcc",
+                        figure=fig,
+                    ),
+                ],
+                style=dict(display="flex", justifyContent="center"),
             ),
             stored_data,
         )
@@ -128,10 +166,8 @@ def render_content(tab, stored_data):
 
 @callback(
     [
-        Output("plot_3_title", "children"),
         Output("graph-3-tabs-dcc", "figure"),
         Output("graph-tab3-storage", "data"),
-        
     ],
     Input(component_id="radio-items-positions", component_property="value"),
     State("graph-tab3-storage", "data"),
@@ -139,21 +175,16 @@ def render_content(tab, stored_data):
 def render_third_tab(position, stored_data):
     if stored_data is None:
         stored_data = {}
-    
-    if position == "Defenders":
-        fig = stored_data.get("fig3") or create_plot_club_increasing_value_def(position)
-    elif position == "Midfielders":
-        fig = stored_data.get("fig4") or create_plot_club_increasing_value_mid(position)
-    else :
-        fig = stored_data.get("fig5") or create_plot_club_increasing_value_at(position)
 
-    stored_data.update({f"fig_{position.lower()}": fig})
+    fig = stored_data.get(f"fig_{position}") or create_plot_club_increasing_value(
+        position
+    )
+
+    stored_data.update({f"fig_{position}": fig})
 
     return (
-        f"Top 10 clubs that increase the median value of young {position}",
         fig,
         stored_data,
-
     )
 
 

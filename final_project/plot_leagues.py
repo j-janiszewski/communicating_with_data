@@ -5,58 +5,54 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def main():
+def plot_leagues():
     # Read in the data
-    df = pd.read_csv('data/league_value_increase_all.csv')
+    df = pd.read_csv("data/league_value_increase_all.csv")
 
+    geojson = gpd.read_file("data/europe.geojson")
 
-    geojson = gpd.read_file('data/europe.geojson')
-
-    print(geojson.head())
+    # print(geojson.head())
 
     fig = px.choropleth(
         df,
         geojson=geojson,
-        locations='country',
-        color='value_increase',
-        locationmode='ISO-3'
+        locations="country",
+        color="value_increase",
+        locationmode="ISO-3",
     )
 
-    fig.update_geos(
-        visible=True
-    )
+    fig.update_geos(visible=True)
 
     fig.update_layout(
         title=dict(
-            text='Go to France, not to Italy<br>'
-                 '<sub>France, Denmark and England increase the '
-                 'median value of young players most</sub>',
+            text="I know you like pasta, but baguettes ain't bad either<br>"
+            "<sub>Italy is the worst eu country for value increase of young players, France, Denmark and England are best</sub>",
             x=0.05,
-            font_size=22,
-            xanchor='left',
+            font_size=26,
+            font_family="Arial",
         ),
         geo=dict(
-            bgcolor='#8ad6ff',
-            lakecolor='#8ad6ff',
-            projection_type='miller',
-            scope='europe',
+            bgcolor="#8ad6ff",
+            lakecolor="#8ad6ff",
+            projection_type="miller",
+            scope="europe",
             # more zoom in
             lonaxis_range=[-15, 45],
-            lataxis_range=[35, 62]
+            lataxis_range=[35, 62],
         ),
         margin=dict(l=0, r=0, t=70, b=0),
         width=900,
         height=600,
         coloraxis=dict(
-            colorscale='viridis',
-            cmin=df['value_increase'].min(),
-            cmax=df['value_increase'].max()
-        )
+            colorscale="viridis",
+            cmin=df["value_increase"].min(),
+            cmax=df["value_increase"].max(),
+        ),
     )
 
     # fig.show()
     return fig
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    plot_leagues()

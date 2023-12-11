@@ -6,13 +6,18 @@ import pandas as pd
 import plotly.graph_objects as go
 from PIL import Image
 
+
 def filter_only_players_from_top5(df):
     df2 = pd.read_csv("data/player_valuations_with_age_and_club.csv")
-    transfers =pd.read_csv("data/club_transfers.csv")
-    transfers = transfers[transfers["league"]!="Arab"]
+    transfers = pd.read_csv("data/club_transfers.csv")
+    transfers = transfers[transfers["league"] != "Arab"]
     clubs = pd.read_csv("data/clubs.csv")
-    top5_league_club_ids= clubs[clubs["name"].isin(transfers["Club"].unique())]["club_id"].unique()
-    df=df.merge(df2[["player_id","date","player_club_id"]], on=["player_id","date"])
+    top5_league_club_ids = clubs[clubs["name"].isin(transfers["Club"].unique())][
+        "club_id"
+    ].unique()
+    df = df.merge(
+        df2[["player_id", "date", "player_club_id"]], on=["player_id", "date"]
+    )
     return df[df["player_club_id"].isin(top5_league_club_ids)]
 
 
@@ -28,8 +33,9 @@ def number_of_players_per_position(df, year):
         position_dict[position] = df.loc[position, "market_value_in_eur"]
     return position_dict
 
+
 def create_plot_value_per_position():
-    player_valuations = pd.read_csv('data/player_valuations_with_age.csv')
+    player_valuations = pd.read_csv("data/player_valuations_with_age.csv")
     player_valuations = filter_only_players_from_top5(player_valuations)
     values = number_of_players_per_position(player_valuations.copy(), 2023)
     coordinates = {
@@ -45,7 +51,7 @@ def create_plot_value_per_position():
         "Left Winger": (-0.8, 4),
         "Goalkeeper": (0, 0),
         "Right-Back": (0.8, 1),
-        "Central Midfield": (0, 2.4)
+        "Central Midfield": (0, 2.4),
     }
 
     colors = {
@@ -61,75 +67,90 @@ def create_plot_value_per_position():
         "Left Winger": "#2ca02c",
         "Goalkeeper": "#d62728",
         "Right-Back": "#1f77b4",
-        "Central Midfield": "#ff7f0e"
+        "Central Midfield": "#ff7f0e",
     }
 
     fig = go.Figure()
 
     for position in coordinates:
-        print(position)
+        # print(position)
 
-        fig.add_trace(go.Scatter(
-            x=[coordinates[position][0]],
-            y=[coordinates[position][1]],
-            mode="markers",
-            marker=dict(
-                size=values[position] / 600000,
-                color=colors[position],
-                opacity=0.5
-            ),
-            name=position,
-            text=position,
-            hoverinfo="text"
-        ))
+        fig.add_trace(
+            go.Scatter(
+                x=[coordinates[position][0]],
+                y=[coordinates[position][1]],
+                mode="markers",
+                marker=dict(
+                    size=values[position] / 600000, color=colors[position], opacity=0.5
+                ),
+                name=position,
+                text=position,
+                hoverinfo="text",
+            )
+        )
 
-         # add annotations for the increase_per_position
+        # add annotations for the increase_per_position
     annotations = []
     for position in coordinates:
         # get the radius of the circle
         # r = 0.25
         r = (values[position] / (600000 * 3.14)) ** 0.5
         y = coordinates[position][1] - r / 10 + 0.07
-        annotations.append(dict(xref='x', yref='y',
-                                x=coordinates[position][0], y=y,
-                                text=position,
-                                font=dict(family='Arial', size=14,
-                                          color=colors[position]),
-                                showarrow=False))
-        annotations.append(dict(xref='x', yref='y',
-                                x=coordinates[position][0], y=coordinates[position][1],
-                                text=f"{round(values[position] / 1000000, 1)}M",
-                                font=dict(family='Arial', size=14,
-                                          color=colors[position]),
-                                showarrow=False))
+        annotations.append(
+            dict(
+                xref="x",
+                yref="y",
+                x=coordinates[position][0],
+                y=y,
+                text=position,
+                font=dict(family="Arial", size=14, color=colors[position]),
+                showarrow=False,
+            )
+        )
+        annotations.append(
+            dict(
+                xref="x",
+                yref="y",
+                x=coordinates[position][0],
+                y=coordinates[position][1],
+                text=f"{round(values[position] / 1000000, 1)}M",
+                font=dict(family="Arial", size=14, color=colors[position]),
+                showarrow=False,
+            )
+        )
     fig.update_layout(annotations=annotations)
 
     # add black lines that represent the field
     fig.add_shape(
         type="line",
-        x0=-1.3, y0=-0.5, x1=1.3, y1=-0.5,
-        line=dict(color="Black", width=2)
+        x0=-1.3,
+        y0=-0.4,
+        x1=1.3,
+        y1=-0.4,
+        line=dict(color="Black", width=2),
     )
     fig.add_shape(
         type="line",
-        x0=-1.3, y0=5.5, x1=1.3, y1=5.5,
-        line=dict(color="Black", width=2)
+        x0=-1.3,
+        y0=5.2,
+        x1=1.3,
+        y1=5.2,
+        line=dict(color="Black", width=2),
     )
     fig.add_shape(
         type="line",
-        x0=-1.3, y0=-0.5, x1=-1.3, y1=5.5,
-        line=dict(color="Black", width=2)
+        x0=-1.3,
+        y0=-0.4,
+        x1=-1.3,
+        y1=5.2,
+        line=dict(color="Black", width=2),
     )
     fig.add_shape(
-        type="line",
-        x0=1.3, y0=-0.5, x1=1.3, y1=5.5,
-        line=dict(color="Black", width=2)
+        type="line", x0=1.3, y0=-0.4, x1=1.3, y1=5.2, line=dict(color="Black", width=2)
     )
     # line in the middle
     fig.add_shape(
-        type="line",
-        x0=-1.3, y0=2.5, x1=1.3, y1=2.5,
-        line=dict(color="Black", width=2)
+        type="line", x0=-1.3, y0=2.5, x1=1.3, y1=2.5, line=dict(color="Black", width=2)
     )
     # circle in the middle
     fig.add_shape(
@@ -145,73 +166,52 @@ def create_plot_value_per_position():
     )
     # goalkeepers area
     fig.add_shape(
-        type="line",
-        x0=-0.7, y0=0.6, x1=0.7, y1=0.6,
-        line=dict(color="Black", width=2)
+        type="line", x0=-0.7, y0=0.6, x1=0.7, y1=0.6, line=dict(color="Black", width=2)
     )
     fig.add_shape(
         type="line",
-        x0=-0.7, y0=-0.5, x1=-0.7, y1=0.6,
-        line=dict(color="Black", width=2)
+        x0=-0.7,
+        y0=-0.4,
+        x1=-0.7,
+        y1=0.6,
+        line=dict(color="Black", width=2),
     )
     fig.add_shape(
-        type="line",
-        x0=0.7, y0=-0.5, x1=0.7, y1=0.6,
-        line=dict(color="Black", width=2)
+        type="line", x0=0.7, y0=-0.4, x1=0.7, y1=0.6, line=dict(color="Black", width=2)
     )
     # goalkeepers area on the other side
     fig.add_shape(
-        type="line",
-        x0=-0.7, y0=4.4, x1=0.7, y1=4.4,
-        line=dict(color="Black", width=2)
+        type="line", x0=-0.7, y0=4.4, x1=0.7, y1=4.4, line=dict(color="Black", width=2)
     )
     fig.add_shape(
         type="line",
-        x0=-0.7, y0=5.5, x1=-0.7, y1=4.4,
-        line=dict(color="Black", width=2)
+        x0=-0.7,
+        y0=5.20,
+        x1=-0.7,
+        y1=4.4,
+        line=dict(color="Black", width=2),
     )
     fig.add_shape(
-        type="line",
-        x0=0.7, y0=5.5, x1=0.7, y1=4.4,
-        line=dict(color="Black", width=2)
+        type="line", x0=0.7, y0=5.20, x1=0.7, y1=4.4, line=dict(color="Black", width=2)
     )
 
     fig.update_layout(
         width=700,
         height=700,
         margin=dict(l=100, r=50, t=50, b=50),
-        plot_bgcolor='rgba(0,0,0,0)',
-        title="Average market value of the increase_per_position group_by the top 500 players 2023",
-        xaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showticklabels=False
-        ),
-        yaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showticklabels=False
-        ),
-        showlegend=False
+        plot_bgcolor="rgba(0,0,0,0)",
+        title="If you can be anything, be an attacker<br><sup>If not, all other positions or equally good</sup>",
+        title_font_size=30,
+        title_font_family="Arial",
+        title_x=0.05,
+        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        showlegend=False,
     )
     return fig
 
-    
-    # fig.add_layout_image(
-    #     source=image,
-    #     x=-1.5,
-    #     y=5.2,
-    #        xref="x",
-    #         yref="y",
-    #     sizex=3,
-    #         sizey=5.5,
-    #         sizing="stretch",
-    #         opacity=0.5,
-    #         layer="below"
-    # )
 
 if __name__ == "__main__":
     fig = create_plot_value_per_position()
     fig.show()
     fig.write_html("images/average_market_value.html")
-
