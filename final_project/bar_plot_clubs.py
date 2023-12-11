@@ -4,11 +4,10 @@ that are increasing value of football players most .
 """
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 
 def create_plot_club_increasing_value(position: str):
-    colors = {"Attackers": "#2ca02c", "Defenders": "#1f77b4", "Midfielders": "#ff7f0e"}
+    colors = {"Attackers": "#BB4430", "Defenders": "#53917E", "Midfielders": "#7EBDC2"}
 
     df = pd.read_csv("data/club_value_increase.csv")
     df = df[df["position"] == position[:-1]]

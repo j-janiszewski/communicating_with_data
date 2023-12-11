@@ -87,7 +87,7 @@ def render_content(tab, stored_data):
                                 "label": html.Div(
                                     ["Defenders"],
                                     style={
-                                        "color": "#1f77b4",
+                                        "color": "#53917E",
                                         "font-size": 20,
                                         "padding": 0,
                                         "margin-bottom": 0,
@@ -99,7 +99,7 @@ def render_content(tab, stored_data):
                                 "label": html.Div(
                                     ["Midfielders"],
                                     style={
-                                        "color": "#ff7f0e",
+                                        "color": "#7EBDC2",
                                         "font-size": 20,
                                         "padding-left": 7,
                                         "padding-right": 7,
@@ -112,7 +112,7 @@ def render_content(tab, stored_data):
                                 "label": html.Div(
                                     ["Attackers"],
                                     style={
-                                        "color": "#2ca02c",
+                                        "color": "#BB4430",
                                         "font-size": 20,
                                         "padding": 0,
                                         "margin-bottom": 0,

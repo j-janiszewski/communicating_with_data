@@ -53,21 +53,26 @@ def create_plot_value_per_position():
         "Right-Back": (0.8, 1),
         "Central Midfield": (0, 2.4),
     }
-
     colors = {
-        "Attacking Midfield": "#ff7f0e",
-        "Second Striker": "#2ca02c",
-        "Centre-Back": "#1f77b4",
-        "Right Winger": "#2ca02c",
-        "Right Midfield": "#ff7f0e",
-        "Left-Back": "#1f77b4",
-        "Centre-Forward": "#2ca02c",
-        "Left Midfield": "#ff7f0e",
-        "Defensive Midfield": "#ff7f0e",
-        "Left Winger": "#2ca02c",
-        "Goalkeeper": "#d62728",
-        "Right-Back": "#1f77b4",
-        "Central Midfield": "#ff7f0e",
+        "Goalkeeper": "#9F9396",
+        "Defender": "#53917E",
+        "Attacker": "#BB4430",
+        "Midfielder": "#7EBDC2",
+    }
+    position_groups = {
+        "Attacking Midfield": "Midfielder",
+        "Second Striker": "Attacker",
+        "Centre-Back": "Defender",
+        "Right Winger": "Attacker",
+        "Right Midfield": "Midfielder",
+        "Left-Back": "Defender",
+        "Centre-Forward": "Attacker",
+        "Left Midfield": "Midfielder",
+        "Defensive Midfield": "Midfielder",
+        "Left Winger": "Attacker",
+        "Goalkeeper": "Goalkeeper",
+        "Right-Back": "Defender",
+        "Central Midfield": "Midfielder",
     }
 
     fig = go.Figure()
@@ -81,7 +86,9 @@ def create_plot_value_per_position():
                 y=[coordinates[position][1]],
                 mode="markers",
                 marker=dict(
-                    size=values[position] / 600000, color=colors[position], opacity=0.5
+                    size=values[position] / 600000,
+                    color=colors[position_groups[position]],
+                    opacity=0.8,
                 ),
                 name=position,
                 text=position,
@@ -103,7 +110,9 @@ def create_plot_value_per_position():
                 x=coordinates[position][0],
                 y=y,
                 text=position,
-                font=dict(family="Arial", size=14, color=colors[position]),
+                font=dict(
+                    family="Arial", size=14, color=colors[position_groups[position]]
+                ),
                 showarrow=False,
             )
         )
@@ -114,7 +123,7 @@ def create_plot_value_per_position():
                 x=coordinates[position][0],
                 y=coordinates[position][1],
                 text=f"{round(values[position] / 1000000, 1)}M",
-                font=dict(family="Arial", size=14, color=colors[position]),
+                font=dict(family="Arial", size=14, color="black"),
                 showarrow=False,
             )
         )
