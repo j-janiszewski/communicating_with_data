@@ -104,6 +104,78 @@ def create_plot_value_per_position():
                                 showarrow=False))
     fig.update_layout(annotations=annotations)
 
+    # add black lines that represent the field
+    fig.add_shape(
+        type="line",
+        x0=-1.3, y0=-0.5, x1=1.3, y1=-0.5,
+        line=dict(color="Black", width=2)
+    )
+    fig.add_shape(
+        type="line",
+        x0=-1.3, y0=5.5, x1=1.3, y1=5.5,
+        line=dict(color="Black", width=2)
+    )
+    fig.add_shape(
+        type="line",
+        x0=-1.3, y0=-0.5, x1=-1.3, y1=5.5,
+        line=dict(color="Black", width=2)
+    )
+    fig.add_shape(
+        type="line",
+        x0=1.3, y0=-0.5, x1=1.3, y1=5.5,
+        line=dict(color="Black", width=2)
+    )
+    # line in the middle
+    fig.add_shape(
+        type="line",
+        x0=-1.3, y0=2.5, x1=1.3, y1=2.5,
+        line=dict(color="Black", width=2)
+    )
+    # circle in the middle
+    fig.add_shape(
+        type="circle",
+        xref="x",
+        yref="y",
+        x0=-0.41,
+        y0=1.75,
+        x1=0.41,
+        y1=3.25,
+        line_color="Black",
+        line_width=2,
+    )
+    # goalkeepers area
+    fig.add_shape(
+        type="line",
+        x0=-0.7, y0=0.6, x1=0.7, y1=0.6,
+        line=dict(color="Black", width=2)
+    )
+    fig.add_shape(
+        type="line",
+        x0=-0.7, y0=-0.5, x1=-0.7, y1=0.6,
+        line=dict(color="Black", width=2)
+    )
+    fig.add_shape(
+        type="line",
+        x0=0.7, y0=-0.5, x1=0.7, y1=0.6,
+        line=dict(color="Black", width=2)
+    )
+    # goalkeepers area on the other side
+    fig.add_shape(
+        type="line",
+        x0=-0.7, y0=4.4, x1=0.7, y1=4.4,
+        line=dict(color="Black", width=2)
+    )
+    fig.add_shape(
+        type="line",
+        x0=-0.7, y0=5.5, x1=-0.7, y1=4.4,
+        line=dict(color="Black", width=2)
+    )
+    fig.add_shape(
+        type="line",
+        x0=0.7, y0=5.5, x1=0.7, y1=4.4,
+        line=dict(color="Black", width=2)
+    )
+
     fig.update_layout(
         width=700,
         height=700,
