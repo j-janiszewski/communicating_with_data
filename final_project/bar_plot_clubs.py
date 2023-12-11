@@ -34,13 +34,13 @@ def create_plot_club_increasing_value(position: str):
             text="If you have a chance, pick one of this clubs <br><sup>Not all clubs are equally good at increasing value of players in different positions</sup>",
             font_size=30,
             font_family="Arial",
-            x=0.5,
+            x=0.05,
         ),
         yaxis=dict(
             showgrid=False,
             showline=False,
             showticklabels=False,
-            domain=[0, 1],
+            # domain=[0, 1],
         ),
         xaxis=dict(
             zeroline=False,

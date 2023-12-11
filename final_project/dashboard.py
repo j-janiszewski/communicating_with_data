@@ -89,7 +89,7 @@ def render_content(tab, stored_data):
                                     style={
                                         "color": "#1f77b4",
                                         "font-size": 20,
-                                        "padding": 20,
+                                        "padding": 0,
                                         "margin-bottom": 0,
                                     },
                                 ),
@@ -101,7 +101,8 @@ def render_content(tab, stored_data):
                                     style={
                                         "color": "#ff7f0e",
                                         "font-size": 20,
-                                        "padding": 20,
+                                        "padding-left": 7,
+                                        "padding-right": 7,
                                         "margin-bottom": 0,
                                     },
                                 ),
@@ -113,7 +114,7 @@ def render_content(tab, stored_data):
                                     style={
                                         "color": "#2ca02c",
                                         "font-size": 20,
-                                        "padding": 20,
+                                        "padding": 0,
                                         "margin-bottom": 0,
                                     },
                                 ),
