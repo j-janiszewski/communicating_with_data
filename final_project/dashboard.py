@@ -60,7 +60,7 @@ def render_content(tab, stored_data):
         return (
             html.Div(
                 [dcc.Graph(id="positions_field", figure=fig)],
-                style=dict(display="flex", justifyContent="center"),
+                style=dict(display="flex", justifyContent="center", padding=20),
             ),
             stored_data,
         )
@@ -71,7 +71,7 @@ def render_content(tab, stored_data):
         return (
             html.Div(
                 [dcc.Graph(id="graph-2-tabs-dcc", figure=fig)],
-                style=dict(display="flex", justifyContent="center"),
+                style=dict(display="flex", justifyContent="center", padding=20),
             ),
             stored_data,
         )
@@ -123,7 +123,7 @@ def render_content(tab, stored_data):
                         value="Defenders",
                         id="radio-items-positions",
                         inline=True,
-                        style=dict(display="flex", justifyContent="center"),
+                        style=dict(display="flex", justifyContent="center", padding=20),
                     ),
                 ]
             ),
@@ -156,7 +156,7 @@ def render_content(tab, stored_data):
                         figure=fig,
                     ),
                 ],
-                style=dict(display="flex", justifyContent="center"),
+                style=dict(display="flex", justifyContent="center", padding=20),
             ),
             stored_data,
         )
