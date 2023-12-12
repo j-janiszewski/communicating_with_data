@@ -1,6 +1,7 @@
-To run dashboard type command:
-'''console
-python dashboard.py
+## Instructions to run the project
 
-''''
-In the directory "final_project".
+
+    1. cd final_project
+    2. pip install -r requirements.txt
+    3. python3 dashboard.py
+
