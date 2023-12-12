@@ -41,6 +41,19 @@ app.layout = html.Div(
         dcc.Store(id="graph-storage"),
         dcc.Store(id="graph-tab3-storage"),
         html.Div(id="tabs-content-example-graph"),
+        dbc.Row(
+            [
+                dbc.Col(md=8),
+                dbc.Col(
+                    html.H6(
+                        "Data source: Transfermarkt",
+                        style={"textAlign": "left", "justify": "left"},
+                    ),
+                    md=4,
+                ),
+            ],
+            align="center",
+        ),
     ]
 )
 
@@ -135,7 +148,7 @@ def render_content(tab, stored_data):
                             border="2px solid",
                             borderRadius=10,
                             margin=10,
-                            backgroundColor="#F4F4F4"
+                            backgroundColor="#F4F4F4",
                         ),
                         inputStyle=dict(display="none"),
                         inputClassName="radio-items-positions",
@@ -204,4 +217,4 @@ def render_third_tab(position, stored_data):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
