@@ -209,7 +209,7 @@ def create_plot_value_per_position():
         height=700,
         margin=dict(l=100, r=50, t=50, b=50),
         plot_bgcolor="rgba(0,0,0,0)",
-        title="If you can be anything, be an attacker<br><sup>If not, all other positions are equally good</sup>",
+        title="You are fast and shoot good? Go for left wing<br><sup>If not avoid being left mid or right mid</sup>",
         title_font_size=30,
         title_font_family="Arial",
         title_x=0.05,

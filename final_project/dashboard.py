@@ -47,7 +47,7 @@ app.layout = html.Div(
                 dbc.Col(
                     html.H6(
                         "Data source: Transfermarkt",
-                        style={"textAlign": "left", "justify": "left"},
+                        style={"textAlign": "right", "justify": "right"},
                     ),
                     md=4,
                 ),
